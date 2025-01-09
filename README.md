@@ -16,32 +16,51 @@ npm install -g git-push-helper
 After installing, you can use the `push` command globally to commit and push your changes in a single step.
 
 ```bash
-push "<commit-message>" <branch-name>
+push "<commit-message>" [branch-name] [-p]
 ```
 
-If no branch name is provided, `git-push-helper` will automatically detect the current branch.
+### Parameters
+- `<commit-message>`: The commit message to use.
+- `[branch-name]`: (Optional) The branch to push to. If not provided, the script will detect the current branch automatically.
+- `-p`: (Optional) Increment the patch version in `package.json` and `package-lock.json` before committing.
 
 ### Example:
 
-```bash
-push "Fix login bug" main
-```
+1. **Push without version bump**:
+   ```bash
+   push "Fix login bug"
+   ```
+   This will:
+   - Commit your changes with the message "Fix login bug".
+   - Push the changes to the detected branch.
 
-This will execute the following Git commands under the hood:
+2. **Push with version bump**:
+   ```bash
+   push "Add new feature" -p
+   ```
+   This will:
+   - Increment the patch version (e.g., `1.0.0` → `1.0.1`).
+   - Commit the version bump.
+   - Commit your changes with the message "Add new feature".
+   - Push the changes to the detected branch.
 
-```bash
-git add .
-git commit -m "Fix login bug"
-git push origin main
-```
+3. **Specify a branch**:
+   ```bash
+   push "Update styles" dev
+   ```
+   This will:
+   - Commit your changes with the message "Update styles".
+   - Push the changes to the `dev` branch.
 
-Or, if no branch is specified:
-
-```bash
-push "Fix login bug"
-```
-
-This will detect the current branch and push the changes to it.
+4. **Specify a branch with version bump**:
+   ```bash
+   push "Enhance API" dev -p
+   ```
+   This will:
+   - Increment the patch version.
+   - Commit the version bump.
+   - Commit your changes with the message "Enhance API".
+   - Push the changes to the `dev` branch.
 
 ### Error Handling
 If any error occurs during the Git operations, the tool will provide an error message and exit.
@@ -50,6 +69,7 @@ If any error occurs during the Git operations, the tool will provide an error me
 
 - Automates the `git add`, `git commit`, and `git push` workflow.
 - Auto-detects the current branch if no branch is specified.
+- Supports optional version bumping with the `-p` flag.
 - Simple and intuitive CLI for quick usage.
 - Supports global installation for seamless access from anywhere.
 

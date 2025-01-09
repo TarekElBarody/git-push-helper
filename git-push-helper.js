@@ -5,14 +5,15 @@ const { execSync } = require('child_process');
 const args = process.argv.slice(2);
 
 if (args.length < 1) {
-  console.error('Usage: push "<commit-message>" [branch]');
+  console.error('Usage: push "<commit-message>" [branch] [-p]');
   process.exit(1);
 }
 
 const commitMessage = args[0];
 let branchName = args[1];
+const patchFlag = args.includes('-p');
 
-if (!branchName) {
+if (!branchName || branchName === '-p') {
   try {
     // Detect the current branch
     branchName = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8' }).trim();
@@ -24,6 +25,11 @@ if (!branchName) {
 }
 
 try {
+  if (patchFlag) {
+    console.log('Bumping version (patch)...');
+    execSync('npm version patch -m "chore(release): bump version to %s"', { stdio: 'inherit' });
+  }
+
   console.log('Adding changes...');
   execSync('git add .', { stdio: 'inherit' });
 
