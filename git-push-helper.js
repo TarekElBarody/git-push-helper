@@ -4,13 +4,24 @@ const { execSync } = require('child_process');
 
 const args = process.argv.slice(2);
 
-if (args.length !== 2) {
-  console.error('Usage: push "<commit-message>" <branch>');
+if (args.length < 1) {
+  console.error('Usage: push "<commit-message>" [branch]');
   process.exit(1);
 }
 
 const commitMessage = args[0];
-const branchName = args[1];
+let branchName = args[1];
+
+if (!branchName) {
+  try {
+    // Detect the current branch
+    branchName = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8' }).trim();
+    console.log(`Detected current branch: ${branchName}`);
+  } catch (error) {
+    console.error('Error detecting current branch:', error.message);
+    process.exit(1);
+  }
+}
 
 try {
   console.log('Adding changes...');

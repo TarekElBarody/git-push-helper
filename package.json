@@ -4,9 +4,14 @@
   "description": "A helper tool to simplify git commit and push commands",
   "main": "git-push-helper.js",
   "bin": {
-    "push": "./git-push-helper.js"
+    "push": "git-push-helper.js"
   },
-  "keywords": ["git", "helper", "push", "commit"],
+  "keywords": [
+    "git",
+    "helper",
+    "push",
+    "commit"
+  ],
   "author": "Tarek El Barody",
   "license": "MIT"
 }
