@@ -13,5 +13,9 @@
     "commit"
   ],
   "author": "Tarek El Barody",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TarekElBarody/git-push-helper"
+  }
 }
