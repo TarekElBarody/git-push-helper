@@ -16,13 +16,14 @@ npm install -g git-push-helper
 After installing, you can use the `push` command globally to commit and push your changes in a single step.
 
 ```bash
-push "<commit-message>" [branch-name] [-p]
+push "<commit-message>" [branch-name] [-p] [-m]
 ```
 
 ### Parameters
 - `<commit-message>`: The commit message to use.
-- `[branch-name]`: (Optional) The branch to push to. If not provided, the script will detect the current branch automatically.
-- `-p`: (Optional) Increment the patch version in `package.json` and `package-lock.json` before committing.
+- `[branch-name]`: (Optional) The branch to push to. If not provided, the script will detect the current branch automatically. If the specified branch does not exist, it will be created and switched to.
+- `-p`: (Optional) Increment the patch version in `package.json` and `package-lock.json` before committing (e.g., `1.0.1` → `1.0.2`).
+- `-m`: (Optional) Increment the minor version in `package.json` and `package-lock.json` before committing (e.g., `1.1.0` → `1.2.0`).
 
 ### Example:
 
@@ -34,17 +35,27 @@ push "<commit-message>" [branch-name] [-p]
    - Commit your changes with the message "Fix login bug".
    - Push the changes to the detected branch.
 
-2. **Push with version bump**:
+2. **Push with patch version bump**:
    ```bash
    push "Add new feature" -p
    ```
    This will:
-   - Increment the patch version (e.g., `1.0.0` → `1.0.1`).
+   - Increment the patch version (e.g., `1.0.1` → `1.0.2`).
    - Commit the version bump.
    - Commit your changes with the message "Add new feature".
    - Push the changes to the detected branch.
 
-3. **Specify a branch**:
+3. **Push with minor version bump**:
+   ```bash
+   push "Add major feature" -m
+   ```
+   This will:
+   - Increment the minor version (e.g., `1.1.0` → `1.2.0`).
+   - Commit the version bump.
+   - Commit your changes with the message "Add major feature".
+   - Push the changes to the detected branch.
+
+4. **Specify a branch (branch exists)**:
    ```bash
    push "Update styles" dev
    ```
@@ -52,15 +63,15 @@ push "<commit-message>" [branch-name] [-p]
    - Commit your changes with the message "Update styles".
    - Push the changes to the `dev` branch.
 
-4. **Specify a branch with version bump**:
+5. **Specify a branch (branch does not exist)**:
    ```bash
-   push "Enhance API" dev -p
+   push "Enhance API" new-feature
    ```
    This will:
-   - Increment the patch version.
-   - Commit the version bump.
+   - Create the `new-feature` branch if it doesn't exist.
+   - Switch to the `new-feature` branch.
    - Commit your changes with the message "Enhance API".
-   - Push the changes to the `dev` branch.
+   - Push the changes to the `new-feature` branch.
 
 ### Error Handling
 If any error occurs during the Git operations, the tool will provide an error message and exit.
@@ -69,7 +80,10 @@ If any error occurs during the Git operations, the tool will provide an error me
 
 - Automates the `git add`, `git commit`, and `git push` workflow.
 - Auto-detects the current branch if no branch is specified.
-- Supports optional version bumping with the `-p` flag.
+- Creates and switches to a new branch if the specified branch does not exist.
+- Supports optional version bumping:
+  - `-p`: Increment patch version (e.g., `1.0.1` → `1.0.2`).
+  - `-m`: Increment minor version (e.g., `1.1.0` → `1.2.0`).
 - Simple and intuitive CLI for quick usage.
 - Supports global installation for seamless access from anywhere.
 
