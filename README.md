@@ -73,6 +73,10 @@ push "<commit-message>" [branch-name] [-p] [-m]
    - Commit your changes with the message "Enhance API".
    - Push the changes to the `new-feature` branch.
 
+### Branch Handling
+- If the specified branch does not exist, the script will create it and switch to it.
+- If the branch already exists, the script will switch to it without attempting to recreate it.
+
 ### Error Handling
 If any error occurs during the Git operations, the tool will provide an error message and exit.
 
