@@ -29,9 +29,13 @@ if (!branchName || branchName === '-p' || branchName === '-m') {
 
 try {
   // Check if the branch exists
-  const branchExists = execSync(`git show-ref --verify --quiet refs/heads/${branchName}`)
-    .toString()
-    .trim();
+  let branchExists = false;
+  try {
+    execSync(`git show-ref --verify refs/heads/${branchName}`, { stdio: 'ignore' });
+    branchExists = true;
+  } catch (error) {
+    branchExists = false;
+  }
 
   if (!branchExists) {
     console.log(`Branch "${branchName}" does not exist. Creating and switching to it...`);
