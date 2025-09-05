@@ -102,5 +102,5 @@ This project is licensed under the MIT License.
 
 ---
 
-Made with ❤️ by Tarek El Barody
+Made with ❤️ by Tarek
 
