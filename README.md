@@ -16,66 +16,68 @@ npm install -g git-push-helper
 After installing, you can use the `push` command globally to commit and push your changes in a single step.
 
 ```bash
-push "<commit-message>" [branch-name] [-p] [-m]
+push "<title>" ["<message>"] [-b <branch>] [-p | -m]
 ```
 
 ### Parameters
-- `<commit-message>`: The commit message to use.
-- `[branch-name]`: (Optional) The branch to push to. If not provided, the script will detect the current branch automatically. If the specified branch does not exist, it will be created and switched to.
+- `<title>`: The commit title (first line of the commit).
+- `<message>`: (Optional) A longer description, added to the commit below the title.
+- `-b <branch>`: (Optional) The branch to push to. If not given, the current branch is used.
+  - If the branch exists locally, it is switched to.
+  - If it exists only on `origin`, it is checked out and set to track `origin/<branch>`.
+  - If it does not exist anywhere, it is created.
 - `-p`: (Optional) Increment the patch version in `package.json` and `package-lock.json` before committing (e.g., `1.0.1` → `1.0.2`).
 - `-m`: (Optional) Increment the minor version in `package.json` and `package-lock.json` before committing (e.g., `1.1.0` → `1.2.0`).
+- `-h`, `--help`: Show the usage.
 
-### Example:
+Options can be written in any order.
 
-1. **Push without version bump**:
+### Examples
+
+1. **Push with a title only**:
    ```bash
    push "Fix login bug"
    ```
-   This will:
-   - Commit your changes with the message "Fix login bug".
-   - Push the changes to the detected branch.
+   Commits all changes with the title "Fix login bug" and pushes to the current branch.
 
-2. **Push with patch version bump**:
+2. **Push with a title and a message**:
+   ```bash
+   push "Fix login bug" "The token was not refreshed after the session expired."
+   ```
+   The commit gets "Fix login bug" as its title and the second text as its description.
+
+3. **Push to another branch**:
+   ```bash
+   push "Update styles" -b dev
+   ```
+   Switches to `dev` (creating it if needed), commits, and pushes to `origin/dev`.
+
+4. **Push with a patch version bump**:
    ```bash
    push "Add new feature" -p
    ```
-   This will:
-   - Increment the patch version (e.g., `1.0.1` → `1.0.2`).
-   - Commit the version bump.
-   - Commit your changes with the message "Add new feature".
-   - Push the changes to the detected branch.
+   - Increments the patch version (e.g., `1.0.1` → `1.0.2`) in its own commit: `chore(release): bump version to 1.0.2`.
+   - Commits your changes with the title "Add new feature".
+   - Pushes both commits.
 
-3. **Push with minor version bump**:
+5. **Everything together**:
    ```bash
-   push "Add major feature" -m
+   push "Add reports page" "New monthly and yearly reports." -b dev -m
    ```
-   This will:
-   - Increment the minor version (e.g., `1.1.0` → `1.2.0`).
-   - Commit the version bump.
-   - Commit your changes with the message "Add major feature".
-   - Push the changes to the detected branch.
 
-4. **Specify a branch (branch exists)**:
-   ```bash
-   push "Update styles" dev
-   ```
-   This will:
-   - Commit your changes with the message "Update styles".
-   - Push the changes to the `dev` branch.
+### Upgrading from 1.x
+In 1.x the branch was the second argument (`push "msg" dev`). From 2.0 the second argument is the commit message, and the branch is given with `-b`:
 
-5. **Specify a branch (branch does not exist)**:
-   ```bash
-   push "Enhance API" new-feature
-   ```
-   This will:
-   - Create the `new-feature` branch if it doesn't exist.
-   - Switch to the `new-feature` branch.
-   - Commit your changes with the message "Enhance API".
-   - Push the changes to the `new-feature` branch.
+```bash
+push "msg" -b dev
+```
 
-### Branch Handling
-- If the specified branch does not exist, the script will create it and switch to it.
-- If the branch already exists, the script will switch to it without attempting to recreate it.
+### Behaviour notes
+- Works from any folder inside the repository. All changes in the repository are committed, and the nearest `package.json` (from the current folder up to the repo root) is used for version bumps.
+- If there is nothing new to commit, existing commits are still pushed.
+- The branch is pushed with `-u`, so it tracks `origin/<branch>` afterwards.
+- Pre-release versions follow `npm version` rules (e.g., `-p` on `1.0.0-beta.1` gives `1.0.0`).
+- Quotes, `$`, backticks and `%` in the title or message are kept as typed.
 
 ### Error Handling
 If any error occurs during the Git operations, the tool will provide an error message and exit.
@@ -83,8 +85,9 @@ If any error occurs during the Git operations, the tool will provide an error me
 ## Features
 
 - Automates the `git add`, `git commit`, and `git push` workflow.
+- Separate commit title and message.
 - Auto-detects the current branch if no branch is specified.
-- Creates and switches to a new branch if the specified branch does not exist.
+- Switches to, checks out from `origin`, or creates the branch given with `-b`.
 - Supports optional version bumping:
   - `-p`: Increment patch version (e.g., `1.0.1` → `1.0.2`).
   - `-m`: Increment minor version (e.g., `1.1.0` → `1.2.0`).
@@ -103,4 +106,3 @@ This project is licensed under the MIT License.
 ---
 
 Made with ❤️ by Tarek
-
